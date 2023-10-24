@@ -20,7 +20,7 @@ export class CreateConductorDto {
     description: ' CORREO ELECTRONICO ',
   })
   mail: string;
-  @IsNumber()
+  @IsString()
   @ApiProperty({
     example: '1804688255',
     description: 'NUMERO DE DOCUMENTO DE IDENTIDAD',
@@ -44,12 +44,6 @@ export class CreateConductorDto {
     description: ' CONTRASEÑA ',
   })
   password: string;
-  @IsString()
-  @ApiProperty({
-    example: 'ADMINISTRADOR',
-    description: ' ROL ',
-  })
-  role: string;
   @IsString()
   @ApiProperty({
     example: 'ANTHONY ANDRES LANDAZURI',

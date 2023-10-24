@@ -1,45 +1,41 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { CreateTransporteDto } from './dto/create-transporte.dto';
-import { UpdateTransporteDto } from './dto/update-transporte.dto';
-import { Vehicle } from './entities/transporte.entity';
+import { DeliveryDetails } from './entities/detalles-entregas.entity';
 import { Repository } from 'typeorm';
+import { CreateDeliveryDetailsDto } from './dto/create-detalles-entregas.dto';
 import { ErrorMessage } from 'src/configuration/error-messages';
-import { FindTransporteDto } from './dto/find-transporte.dto';
-import { Drivers } from '../conductores/entities/conductor.entity';
+import { FindDeliveryDetailsDto } from './dto/find-detalles-entregas.dto';
+import { UpdateDeliveryDetailsDto } from './dto/update-detalles-entregas.dto';
 
 @Injectable()
-export class TransportesService {
+export class DeliveryDetailsService {
   constructor(
-    @Inject('TRANSPORTE_REPOSITORY')
-    private transporteRepository: Repository<Vehicle>,
-
-    @Inject('CONDUCTOR_REPOSITORY')
-    private conductorRepository: Repository<Drivers>,
+    @Inject('DETALLE_ENTREGA_REPOSITORY')
+    private deliveryDetailsRepository: Repository<DeliveryDetails>,
   ) {}
 
-  async create(createTransporteDto: CreateTransporteDto) {
+  async create(createDeliveryDetailsDto: CreateDeliveryDetailsDto) {
     try {
-      const respObjDrivers = await this.conductorRepository.findOneBy({
-        id: createTransporteDto.drivers,
-      });
-      if (!respObjDrivers) {
-        throw new HttpException(
-          {
-            message: ErrorMessage.dataNotFound.message,
-            codRetorno: ErrorMessage.dataNotFound.codRetorno,
-          },
-          ErrorMessage.dataNotFound.status,
-          {
-            cause: new Error(ErrorMessage.dataNotFound.message),
-            description: ErrorMessage.dataNotFound.message,
-          },
-        );
-      }
-      const objTransporteDto =
-        await this.transporteRepository.create(createTransporteDto);
-      const resp = await this.transporteRepository.save({
+      // const respObjDrivers = await this.conductorRepository.findOneBy({
+      //   id: createDeliveryDetailsDto.drivers,
+      // });
+      // if (!respObjDrivers) {
+      //   throw new HttpException(
+      //     {
+      //       message: ErrorMessage.dataNotFound.message,
+      //       codRetorno: ErrorMessage.dataNotFound.codRetorno,
+      //     },
+      //     ErrorMessage.dataNotFound.status,
+      //     {
+      //       cause: new Error(ErrorMessage.dataNotFound.message),
+      //       description: ErrorMessage.dataNotFound.message,
+      //     },
+      //   );
+      // }
+      const objTransporteDto = await this.deliveryDetailsRepository.create(
+        createDeliveryDetailsDto,
+      );
+      const resp = await this.deliveryDetailsRepository.save({
         ...objTransporteDto,
-        respObjDrivers,
       });
       return resp;
     } catch (error) {
@@ -58,9 +54,13 @@ export class TransportesService {
     }
   }
 
-  async findAll(findTransporteDto: FindTransporteDto): Promise<Vehicle[]> {
+  async findAll(
+    findDeliveryDetailsDto: FindDeliveryDetailsDto,
+  ): Promise<DeliveryDetails[]> {
     try {
-      const resp = await this.transporteRepository.findBy(findTransporteDto);
+      const resp = await this.deliveryDetailsRepository.findBy(
+        findDeliveryDetailsDto,
+      );
       return resp;
     } catch (error) {
       throw new HttpException(
@@ -78,9 +78,11 @@ export class TransportesService {
     }
   }
 
-  async findOne(findTransporteDto: FindTransporteDto) {
+  async findOne(findDeliveryDetailsDto: FindDeliveryDetailsDto) {
     try {
-      const resp = await this.transporteRepository.findOneBy(findTransporteDto);
+      const resp = await this.deliveryDetailsRepository.findOneBy(
+        findDeliveryDetailsDto,
+      );
       return resp;
     } catch (error) {
       throw new HttpException(
@@ -98,11 +100,11 @@ export class TransportesService {
     }
   }
 
-  async update(id: number, updateTransporteDto: UpdateTransporteDto) {
+  async update(id: number, updateDeliveryDetailsDto: UpdateDeliveryDetailsDto) {
     try {
-      const resp = await this.transporteRepository.update(
+      const resp = await this.deliveryDetailsRepository.update(
         id,
-        updateTransporteDto,
+        updateDeliveryDetailsDto,
       );
       return resp;
     } catch (error) {
@@ -121,14 +123,14 @@ export class TransportesService {
     }
   }
 
-  async remove(id: number, updateTransporteDto: UpdateTransporteDto) {
+  async remove(id: number, updateDeliveryDetailsDto: UpdateDeliveryDetailsDto) {
     try {
-      const respUpdate = await this.transporteRepository.update(
+      const respUpdate = await this.deliveryDetailsRepository.update(
         id,
-        updateTransporteDto,
+        updateDeliveryDetailsDto,
       );
 
-      const resp = await this.transporteRepository.softDelete(id);
+      const resp = await this.deliveryDetailsRepository.softDelete(id);
 
       return resp;
     } catch (error) {

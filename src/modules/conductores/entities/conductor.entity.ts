@@ -1,9 +1,11 @@
+import { Vehicle } from 'src/modules/transportes/entities/transporte.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 @Entity()
 export class Drivers {
@@ -23,7 +25,7 @@ export class Drivers {
   mail: string;
   @Column()
   password: string;
-  @Column()
+  @Column({ default: '0' })
   rating: string;
   @Column({ default: 'ACT' })
   status: string;
@@ -37,4 +39,6 @@ export class Drivers {
   userChange: string;
   @DeleteDateColumn()
   deletedAt: Date;
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.drivers)
+  vehicle: Vehicle[];
 }

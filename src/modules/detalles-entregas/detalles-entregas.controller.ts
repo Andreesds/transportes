@@ -9,31 +9,30 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { TransportesService } from './transportes.service';
-import { CreateTransporteDto } from './dto/create-transporte.dto';
-import { UpdateTransporteDto } from './dto/update-transporte.dto';
+import { CreateDeliveryDetailsDto } from './dto/create-detalles-entregas.dto';
+import { UpdateDeliveryDetailsDto } from './dto/update-detalles-entregas.dto';
 import { LoggerService } from 'src/util/util.logger';
 import {
   ApiBody,
   ApiCreatedResponse,
-  ApiHeader,
   ApiOperation,
-  ApiParam,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { errorResponse, successResponse } from 'src/network/responseApi';
-import { Request, Response } from 'express';
 import { ErrorMessage } from 'src/configuration/error-messages';
-import { FindTransporteDto } from './dto/find-transporte.dto';
+import { Request, Response } from 'express';
+import { FindDeliveryDetailsDto } from './dto/find-detalles-entregas.dto';
+import { DeliveryDetailsService } from './detalles-entregas.service';
 
 const newLog = new LoggerService();
+@ApiTags('detalle-entregas')
+@Controller('delivery-details')
+export class DeliveryDetailsController {
+  constructor(
+    private readonly deliveryDetailsService: DeliveryDetailsService,
+  ) {}
 
-@ApiTags('vehiculo')
-@Controller('vehicle')
-export class TransportesController {
-  constructor(private readonly transportesService: TransportesService) {}
-  @ApiBody({ type: CreateTransporteDto })
+  @ApiBody({ type: CreateDeliveryDetailsDto })
   @Post('/save')
   @ApiOperation({
     summary: 'Crea un nuevo recurso ',
@@ -42,16 +41,17 @@ export class TransportesController {
   })
   @ApiCreatedResponse({
     description: 'Recurso creado exitosamente.',
-    type: CreateTransporteDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: CreateDeliveryDetailsDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async create(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() createTransporteDto: CreateTransporteDto,
+    @Body() createDeliveryDetailsDto: CreateDeliveryDetailsDto,
   ) {
     try {
-      const resp = await this.transportesService.create(createTransporteDto);
-
+      const resp = await this.deliveryDetailsService.create(
+        createDeliveryDetailsDto,
+      );
       return successResponse(req, res, 200, 1, 1, 'exito', resp);
     } catch (error) {
       newLog.error(
@@ -77,15 +77,17 @@ export class TransportesController {
   })
   @ApiCreatedResponse({
     description: 'Recurso encontrado exitosamente.',
-    type: FindTransporteDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: FindDeliveryDetailsDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async findAll(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() findTransporteDto: FindTransporteDto,
+    @Body() findDeliveryDetailsDto: FindDeliveryDetailsDto,
   ) {
     try {
-      const resp = await this.transportesService.findAll(findTransporteDto);
+      const resp = await this.deliveryDetailsService.findAll(
+        findDeliveryDetailsDto,
+      );
       return successResponse(
         req,
         res,
@@ -115,15 +117,15 @@ export class TransportesController {
   })
   @ApiCreatedResponse({
     description: 'Recurso encontrado exitosamente.',
-    type: FindTransporteDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: FindDeliveryDetailsDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async findOne(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() findTransporteDto: FindTransporteDto,
+    @Body() findTransporteDto: FindDeliveryDetailsDto,
   ) {
     try {
-      const resp = await this.transportesService.findOne(findTransporteDto);
+      const resp = await this.deliveryDetailsService.findOne(findTransporteDto);
       return successResponse(req, res, 200, 1, 1, 'exito', resp);
     } catch (error) {
       return errorResponse(
@@ -145,16 +147,16 @@ export class TransportesController {
   })
   @ApiCreatedResponse({
     description: 'Recurso actualzado exitosamente.',
-    type: UpdateTransporteDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: UpdateDeliveryDetailsDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async update(
     @Req() req: Request,
     @Res() res: Response,
     @Param('id') id: string,
-    @Body() updateTransporteDto: UpdateTransporteDto,
+    @Body() updateTransporteDto: UpdateDeliveryDetailsDto,
   ) {
     try {
-      const resp = await this.transportesService.update(
+      const resp = await this.deliveryDetailsService.update(
         +id,
         updateTransporteDto,
       );
@@ -178,16 +180,16 @@ export class TransportesController {
   })
   @ApiCreatedResponse({
     description: 'Recurso eliminar exitosamente.',
-    type: UpdateTransporteDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: UpdateDeliveryDetailsDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async remove(
     @Req() req: Request,
     @Res() res: Response,
     @Param('id') id: string,
-    @Body() updateTransporteDto: UpdateTransporteDto,
+    @Body() updateTransporteDto: UpdateDeliveryDetailsDto,
   ) {
     try {
-      const resp = await this.transportesService.remove(
+      const resp = await this.deliveryDetailsService.remove(
         +id,
         updateTransporteDto,
       );

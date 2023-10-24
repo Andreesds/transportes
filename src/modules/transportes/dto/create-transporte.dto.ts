@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNumber, IsString, MinLength } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class CreateTransporteDto {
   @IsString()
@@ -33,4 +39,11 @@ export class CreateTransporteDto {
     description: ' USUARIO CREA ',
   })
   userCreated: string;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({
+    example: 1,
+    description: ' id_Driver ',
+  })
+  drivers: number;
 }
