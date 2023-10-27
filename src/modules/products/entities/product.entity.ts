@@ -1,26 +1,26 @@
-import { Drivers } from 'src/modules/conductores/entities/conductor.entity';
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
   DeleteDateColumn,
-  ManyToOne,
+  Entity,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
 @Entity()
-export class Vehicle {
+export class Product {
   @PrimaryGeneratedColumn()
   id: number;
-
   @Column()
-  plate: string;
+  name: string;
   @Column()
-  brand: string;
+  price: string;
+  @Column({ default: 0 })
+  quantity: number;
   @Column()
-  typeVehicle: string;
-  @Column()
-  capacity: number;
+  unitMeasure: string;
   @Column({ default: 'ACT' })
   status: string;
+  @Column()
+  discount: string;
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: string;
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
@@ -31,6 +31,4 @@ export class Vehicle {
   userChange: string;
   @DeleteDateColumn()
   deletedAt: Date;
-  @ManyToOne(() => Drivers, (drivers) => drivers.id, { eager: true })
-  drivers: number;
 }

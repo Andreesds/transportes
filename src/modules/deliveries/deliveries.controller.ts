@@ -9,6 +9,10 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+import { DeliveriesService } from './deliveries.service';
+import { CreateDeliveryDto } from './dto/create-delivery.dto';
+import { UpdateDeliveryDto } from './dto/update-delivery.dto';
+import { Request, Response } from 'express';
 import { LoggerService } from 'src/util/util.logger';
 import {
   ApiBody,
@@ -17,38 +21,32 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { errorResponse, successResponse } from 'src/network/responseApi';
-import { Request, Response } from 'express';
 import { ErrorMessage } from 'src/configuration/error-messages';
-import { CreateConductorDto } from './dto/create-conductor.dto';
-import { FindConductorDto } from './dto/find-conductor';
-import { UpdateConductorDto } from './dto/update-conductor.dto';
-import { ConductoresService } from './conductores.service';
-
+import { FindDeliveryDto } from './dto/find-delivery.dto';
 const newLog = new LoggerService();
+@ApiTags('vehiculo')
+@Controller('deliveries')
+export class DeliveriesController {
+  constructor(private readonly deliveriesService: DeliveriesService) {}
 
-@ApiTags('conductores')
-@Controller('drivers')
-export class ConductoresController {
-  constructor(private readonly conductoresService: ConductoresService) {}
-  @ApiBody({ type: CreateConductorDto })
+  @ApiBody({ type: CreateDeliveryDto })
   @Post('/save')
   @ApiOperation({
     summary: 'Crea un nuevo recurso ',
     description:
-      'Este endpoint permite crear un nuevo recurso de tipo createPersonasDto.',
+      'Este endpoint permite crear un nuevo recurso de tipo CreateTransporteDto.',
   })
   @ApiCreatedResponse({
     description: 'Recurso creado exitosamente.',
-    type: CreateConductorDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: CreateDeliveryDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async create(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() createConductorDto: CreateConductorDto,
+    @Body() createDeliveryDto: CreateDeliveryDto,
   ) {
     try {
-      const resp = await this.conductoresService.create(createConductorDto);
-
+      const resp = await this.deliveriesService.create(createDeliveryDto);
       return successResponse(req, res, 200, 1, 1, 'exito', resp);
     } catch (error) {
       newLog.error(
@@ -74,15 +72,15 @@ export class ConductoresController {
   })
   @ApiCreatedResponse({
     description: 'Recurso encontrado exitosamente.',
-    // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: FindDeliveryDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async findAll(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() findConductorDto: FindConductorDto,
+    @Body() findDeliveryDto: FindDeliveryDto,
   ) {
     try {
-      const resp = await this.conductoresService.findAll(findConductorDto);
+      const resp = await this.deliveriesService.findAll(findDeliveryDto);
       return successResponse(
         req,
         res,
@@ -104,7 +102,7 @@ export class ConductoresController {
     }
   }
 
-  @Get('/findOne/:id')
+  @Post('/findOne')
   @ApiOperation({
     summary: 'Busca un recurso ',
     description:
@@ -112,16 +110,16 @@ export class ConductoresController {
   })
   @ApiCreatedResponse({
     description: 'Recurso encontrado exitosamente.',
-    type: CreateConductorDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: FindDeliveryDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async findOne(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() findConductorDto: FindConductorDto,
+    @Body() findDeliveryDto: FindDeliveryDto,
   ) {
     try {
-      const resp = await this.conductoresService.findOne(findConductorDto);
-      return successResponse(req, res, 200, 0, 0, 'exito', resp);
+      const resp = await this.deliveriesService.findOne(findDeliveryDto);
+      return successResponse(req, res, 200, 1, 1, 'exito', resp);
     } catch (error) {
       return errorResponse(
         req,
@@ -142,19 +140,16 @@ export class ConductoresController {
   })
   @ApiCreatedResponse({
     description: 'Recurso actualzado exitosamente.',
-    type: UpdateConductorDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: UpdateDeliveryDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async update(
     @Req() req: Request,
     @Res() res: Response,
     @Param('id') id: string,
-    @Body() updateConductorDto: UpdateConductorDto,
+    @Body() updateDeliveryDto: UpdateDeliveryDto,
   ) {
     try {
-      const resp = await this.conductoresService.update(
-        +id,
-        updateConductorDto,
-      );
+      const resp = await this.deliveriesService.update(+id, updateDeliveryDto);
       return successResponse(req, res, 200, 0, 0, 'exito', resp);
     } catch (error) {
       return errorResponse(
@@ -175,19 +170,16 @@ export class ConductoresController {
   })
   @ApiCreatedResponse({
     description: 'Recurso eliminar exitosamente.',
-    type: UpdateConductorDto, // Sustituye YourResourceDTO por el tipo de tu DTO
+    type: UpdateDeliveryDto, // Sustituye YourResourceDTO por el tipo de tu DTO
   })
   async remove(
     @Req() req: Request,
     @Res() res: Response,
     @Param('id') id: string,
-    @Body() updateConductorDto: UpdateConductorDto,
+    @Body() updateDeliveryDto: UpdateDeliveryDto,
   ) {
     try {
-      const resp = await this.conductoresService.remove(
-        +id,
-        updateConductorDto,
-      );
+      const resp = await this.deliveriesService.remove(+id, updateDeliveryDto);
       return successResponse(req, res, 200, 0, 0, 'exito', resp);
     } catch (error) {
       return errorResponse(

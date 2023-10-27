@@ -1,40 +1,42 @@
 import { Response, Request } from 'express';
+
+// Function to send a successful response
 export function successResponse(
   request: Request,
   response: Response,
-  status: number,
-  totalRegistros: number,
-  countRegistros: number,
-  message: string,
-  retorno: any,
+  status: number = 200,
+  totalRecords: number = 0,
+  recordCount: number = 0,
+  message: string = '',
+  data: any = null,
 ) {
-  message = message || '';
-  let statusCode = status || 200;
-  let respuesta = {
-    ok: true,
-    codRetorno: '0001',
-    totalRegistros,
-    countRegistros,
+  const successResponse = {
+    success: true,
+    statusCode: status,
+    totalRecords,
+    recordCount,
     message,
-    retorno,
+    data,
   };
-  return response.status(statusCode).json(respuesta);
+
+  response.status(status).json(successResponse);
 }
+
+// Function to send an error response
 export function errorResponse(
   request: Request,
   response: Response,
-  codError: string,
-  status: number,
-  message: string,
-  retorno: any,
+  errorCode: string,
+  status: number = 500,
+  message: string = 'Internal server error',
+  data: any = null,
 ) {
-  message = message || 'Internal server error';
-  let statusCode = status || 500;
-  let respuesta = {
-    ok: false,
-    codRetorno: codError,
+  const errorResponse = {
+    success: false,
+    errorCode,
     message,
-    retorno,
+    data,
   };
-  return response.status(statusCode).json(respuesta);
+
+  response.status(status).json(errorResponse);
 }
