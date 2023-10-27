@@ -1,9 +1,11 @@
+import { DeliveryDetails } from 'src/modules/detalles-entregas/entities/detalles-entregas.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 @Entity()
 export class People {
@@ -37,4 +39,6 @@ export class People {
   userChange: string;
   @DeleteDateColumn()
   deletedAt: Date;
+  @OneToMany(() => DeliveryDetails, (deliveryDetails) => deliveryDetails.people)
+  deliveryDetails: DeliveryDetails[];
 }

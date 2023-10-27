@@ -1,7 +1,9 @@
+import { Product } from 'src/modules/products/entities/product.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -31,4 +33,6 @@ export class Provider {
   userChange: string;
   @DeleteDateColumn()
   deletedAt: Date;
+  @OneToMany(() => Product, (product) => product.provider)
+  product: Product[];
 }

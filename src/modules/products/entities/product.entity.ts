@@ -1,7 +1,11 @@
+import { DeliveryDetails } from 'src/modules/detalles-entregas/entities/detalles-entregas.entity';
+import { Provider } from 'src/modules/providers/entities/provider.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -31,4 +35,11 @@ export class Product {
   userChange: string;
   @DeleteDateColumn()
   deletedAt: Date;
+  @OneToMany(
+    () => DeliveryDetails,
+    (deliveryDetails) => deliveryDetails.product,
+  )
+  deliveryDetails: DeliveryDetails[];
+  @ManyToOne(() => Provider, (provider) => provider.id, { eager: true })
+  provider: number;
 }

@@ -1,7 +1,9 @@
+import { DeliveryDetails } from 'src/modules/detalles-entregas/entities/detalles-entregas.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,4 +29,6 @@ export class Route {
   userChange: string;
   @DeleteDateColumn()
   deletedAt: Date;
+  @ManyToOne(() => DeliveryDetails, (deliveryDetails) => deliveryDetails.id, { eager: true })
+  deliveryDetails: number;
 }
